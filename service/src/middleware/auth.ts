@@ -1,7 +1,10 @@
 import { isNotEmptyString } from '../utils/is'
+import Redis from 'ioredis'
+const redis = new Redis()
 
 const auth = async (req, res, next) => {
   const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
+  console.log("AUTH_SECRET_KEY",AUTH_SECRET_KEY)
   if (isNotEmptyString(AUTH_SECRET_KEY)) {
     try {
       const Authorization = req.header('Authorization')
