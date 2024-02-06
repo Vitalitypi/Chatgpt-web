@@ -5,7 +5,7 @@ import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
-
+import Redis from 'ioredis'
 const app = express()
 const router = express.Router()
 
@@ -67,19 +67,62 @@ router.post('/session', async (req, res) => {
   }
 })
 
+router.post('/unsubscribe', async (req, res) => {
+  const redis = new Redis()
+  try {
+    const { token } = req.body as { token : string }
+    if (!token)
+      throw new Error('Secret key is empty')
+    //存储数据
+    await redis.set(token, '0');
+    console.log('redis',token);
+    res.send({ status: 'Success', message: 'Set successfully', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  } finally {
+    // 关闭Redis连接
+    await redis.quit();
+  }
+})
+router.post('/getkey', async (req, res) => {
+  const redis = new Redis()
+  try {
+    const { token } = req.body as { token : string }
+    if (!token)
+      throw new Error('Secret key is empty')
+    //存储数据
+    await redis.set(token, '1');
+    console.log('redis',token);
+    res.send({ status: 'Success', message: 'Get successfully', data: null })
+  }
+  catch (error) {
+    res.send({ status: 'Fail', message: error.message, data: null })
+  } finally {
+    // 关闭Redis连接
+    await redis.quit();
+  }
+})
 router.post('/verify', async (req, res) => {
+  const redis = new Redis()
   try {
     const { token } = req.body as { token: string }
     if (!token)
       throw new Error('Secret key is empty')
-
-    if (process.env.AUTH_SECRET_KEY !== token)
-      throw new Error('密钥无效 | Secret key is invalid')
-
+    // 检索数据
+    const value = await redis.get(token);
+    console.log('redis:',value,value==null,!value);    
+    if (value==null)
+      throw new Error('密钥无效 | 请关注公众号获取秘钥！')
+    if (value=='0')
+      throw new Error('取消关注 | 请重新关注公众号即可！')
     res.send({ status: 'Success', message: 'Verify successfully', data: null })
   }
   catch (error) {
     res.send({ status: 'Fail', message: error.message, data: null })
+  } finally {
+    // 关闭Redis连接
+    await redis.quit();
   }
 })
 
