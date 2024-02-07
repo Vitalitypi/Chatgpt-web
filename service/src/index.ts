@@ -59,7 +59,6 @@ router.post('/session', async (req, res) => {
   try {
     const AUTH_SECRET_KEY = process.env.AUTH_SECRET_KEY
     const hasAuth = isNotEmptyString(AUTH_SECRET_KEY)
-    console.log(AUTH_SECRET_KEY,hasAuth)
     res.send({ status: 'Success', message: '', data: { auth: hasAuth, model: currentModel() } })
   }
   catch (error) {
@@ -76,10 +75,12 @@ router.post('/unsubscribe', async (req, res) => {
     //存储数据
     await redis.set(token, '0');
     console.log('redis',token);
-    res.send({ status: 'Success', message: 'Set successfully', data: null })
+    // 手动保存数据
+    await redis.save();
+    res.send('success')
   }
   catch (error) {
-    res.send({ status: 'Fail', message: error.message, data: null })
+    res.send('fail')
   } finally {
     // 关闭Redis连接
     await redis.quit();
@@ -94,10 +95,12 @@ router.post('/getkey', async (req, res) => {
     //存储数据
     await redis.set(token, '1');
     console.log('redis',token);
-    res.send({ status: 'Success', message: 'Get successfully', data: null })
+    // 手动保存数据
+    await redis.save();
+    res.send('success')
   }
   catch (error) {
-    res.send({ status: 'Fail', message: error.message, data: null })
+    res.send('fail')
   } finally {
     // 关闭Redis连接
     await redis.quit();

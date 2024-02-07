@@ -17,7 +17,7 @@ export function defaultSetting(): UserState {
     userInfo: {
       avatar: 'https://raw.githubusercontent.com/Chanzhaoyu/chatgpt-web/main/src/assets/avatar.jpg',
       name: 'MegaInfo资源库',
-      description: 'Star on <a href="https://github.com/Chanzhaoyu/chatgpt-bot" class="text-blue-500" target="_blank" >GitHub</a>',
+      description: '联系我们 <a href="http://www.aiyou.ink:1002/src/assets/victory.jpg" class="text-blue-500" target="_blank" >扫描二维码</a>',
     },
   }
 }

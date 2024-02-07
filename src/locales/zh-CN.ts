@@ -25,7 +25,7 @@ export default {
     success: '操作成功',
     failed: '操作失败',
     verify: '验证',
-    unauthorizedTips: '扫描二维码，关注公众号，回复ChatGPT，获取密钥，填写下方，无限使用！',
+    unauthorizedTips: '扫描二维码，关注公众号，回复chatgpt（全小写），获取密钥，填写下方，无限使用！',
     stopResponding: '停止响应',
   },
   chat: {
